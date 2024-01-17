@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@apollo/client": "^3.8.9",
+    "apollo-boost": "^0.4.9",
+    "graphql": "^15.8.0",
+    "install": "^0.13.0",
+    "npm": "^10.3.0"
+  }
+}
