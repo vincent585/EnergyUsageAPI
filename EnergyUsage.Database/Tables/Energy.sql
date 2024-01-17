@@ -2,5 +2,5 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY, 
     [Time] DATETIME NOT NULL, 
-    [Consumption] FLOAT(24) NOT NULL
+    [Consumption] DECIMAL(18,2) NOT NULL
 )

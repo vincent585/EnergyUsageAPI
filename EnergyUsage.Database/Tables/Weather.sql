@@ -2,6 +2,6 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY, 
     [Date] DATETIME NOT NULL, 
-    [Temperature] FLOAT(24) NOT NULL, 
-    [AverageHumidity] FLOAT(24) NOT NULL
+    [Temperature] DECIMAL(18,2) NOT NULL, 
+    [AverageHumidity] DECIMAL(18,2) NOT NULL
 )

@@ -1,3 +1,3 @@
 ﻿namespace EnergyUsage.Repository.Dtos;
 
-public record EnergyConsumption(DateTime Time, float Consumption);
+public record EnergyConsumption(DateTime Time, decimal Consumption);
