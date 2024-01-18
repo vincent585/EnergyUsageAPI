@@ -23,8 +23,4 @@
     <ProjectReference Include="..\EnergyUsage.Services\EnergyUsage.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

@@ -26,7 +26,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 
-app.MapGraphQL("/graphql");
+app.MapGraphQL();
+
+app.MapControllers();
 
 
 //app.UseHttpsRedirection();
