@@ -1,5 +1,6 @@
 ﻿using EnergyUsage.Repository.DbConnection;
 using EnergyUsage.Repository.Repositories;
+using EnergyUsage.Repository.Seeder;
 using EnergyUsage.Services.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,6 +13,7 @@ namespace EnergyUsage.Services
             services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
             services.AddScoped<IEnergyUsageRepository, EnergyUsageRepository>();
             services.AddScoped<IWeatherRepository, WeatherRepository>();
+            services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 
             services.AddScoped<Query>();
             services.AddScoped<WeatherQuery>();

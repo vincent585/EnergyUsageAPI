@@ -12,7 +12,6 @@ namespace EnergyUsage.Services.Queries
             _energyUsageRepository = energyUsageRepository ?? throw new ArgumentNullException(nameof(energyUsageRepository));
         }
 
-        [UsePaging]
         public async Task<IEnumerable<EnergyConsumption>> GetEnergyConsumption()
         {
             return await _energyUsageRepository.GetEnergyConsumptionAsync();
