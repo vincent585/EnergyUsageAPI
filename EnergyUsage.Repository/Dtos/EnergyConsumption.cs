@@ -1,3 +1,8 @@
 ﻿namespace EnergyUsage.Repository.Dtos;
 
-public record EnergyConsumption(int Id, DateTime Time, decimal Consumption);
+public class EnergyConsumption
+{
+    public int Id { get; set; }
+    public DateTime Time { get; set; }
+    public decimal Consumption { get; set; }
+}

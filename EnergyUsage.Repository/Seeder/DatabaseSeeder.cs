@@ -34,15 +34,31 @@ namespace EnergyUsage.Repository.Seeder
 
                     if (fileStream.Name.Contains("Weather"))
                     {
-                        weatherData.Add(new Weather(counter++, DateTime.Parse(splitLine[0]), decimal.Parse(splitLine[1]), decimal.Parse(splitLine[2])));
+                        weatherData.Add(new Weather
+                        {
+                            Id = counter++,
+                            Date = DateTime.Parse(splitLine[0]),
+                            Temperature = decimal.Parse(splitLine[1]),
+                            AverageHumidity = decimal.Parse(splitLine[2])
+                        });
                     }
                     else if (fileStream.Name.Contains("Anomalies"))
                     {
-                        anomaliesData.Add(new EnergyConsumption(counter++, DateTime.Parse(splitLine[0]), decimal.Parse(splitLine[1])));
+                        anomaliesData.Add(new EnergyConsumption
+                        {
+                            Id = counter++,
+                            Time = DateTime.Parse(splitLine[0]),
+                            Consumption = decimal.Parse(splitLine[1])
+                        });
                     }
                     else
                     {
-                        energyData.Add(new EnergyConsumption(counter++, DateTime.Parse(splitLine[0]), decimal.Parse(splitLine[1])));
+                        energyData.Add(new EnergyConsumption
+                        {
+                            Id = counter++,
+                            Time = DateTime.Parse(splitLine[0]),
+                            Consumption = decimal.Parse(splitLine[1])
+                        });
                     }
                 }
             }
