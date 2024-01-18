@@ -59,7 +59,6 @@
     <Folder Include="Properties" />
     <Folder Include="Scripts" />
     <Folder Include="Stored Procedures" />
-    <Folder Include="Data" />
     <Folder Include="Tables" />
   </ItemGroup>
   <ItemGroup>
