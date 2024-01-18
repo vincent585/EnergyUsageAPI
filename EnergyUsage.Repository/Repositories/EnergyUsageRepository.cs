@@ -2,6 +2,7 @@
 using Dapper;
 using EnergyUsage.Repository.DbConnection;
 using EnergyUsage.Repository.Dtos;
+using Z.Dapper.Plus;
 
 namespace EnergyUsage.Repository.Repositories
 {
@@ -27,6 +28,15 @@ namespace EnergyUsage.Repository.Repositories
             using var connection = _dbConnectionFactory.Create();
 
             return await connection.QueryAsync<EnergyConsumption>("dbo.Energy_GetAllAnomalies", commandType: CommandType.StoredProcedure);
+        }
+
+        public void Seed(string tableName, IEnumerable<EnergyConsumption> dataToSeed)
+        {
+            using var connection = _dbConnectionFactory.Create();
+
+            DapperPlusManager.Entity<EnergyConsumption>().Table(tableName).Key(x => x.Id);
+
+            connection.UseBulkOptions(opts => opts.InsertIfNotExists = true).BulkInsert(dataToSeed);
         }
     }
 }

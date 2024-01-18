@@ -6,5 +6,6 @@ namespace EnergyUsage.Repository.Repositories
     {
         Task<IEnumerable<EnergyConsumption>> GetEnergyConsumptionAsync();
         Task<IEnumerable<EnergyConsumption>> GetEnergyConsumptionAnomaliesAsync();
+        void Seed(string tableName, IEnumerable<EnergyConsumption> dataToSeed);
     }
 }

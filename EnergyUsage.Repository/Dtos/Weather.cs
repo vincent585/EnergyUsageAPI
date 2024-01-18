@@ -1,3 +1,3 @@
 ﻿namespace EnergyUsage.Repository.Dtos;
 
-public record Weather(DateTime Date, decimal Temperature, decimal AverageHumidity);
+public record Weather(int Id, DateTime Date, decimal Temperature, decimal AverageHumidity);
