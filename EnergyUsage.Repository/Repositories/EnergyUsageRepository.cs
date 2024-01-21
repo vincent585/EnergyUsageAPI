@@ -15,11 +15,14 @@ namespace EnergyUsage.Repository.Repositories
             _dbConnectionFactory = dbConnectionFactory ?? throw new ArgumentNullException(nameof(dbConnectionFactory));
         }
 
-        public async Task<IEnumerable<EnergyConsumption>> GetEnergyConsumptionAsync()
+        public async Task<IEnumerable<EnergyConsumption>> GetEnergyConsumptionAsync(int pageSize, int page)
         {
             using var connection = _dbConnectionFactory.Create();
+            var parameters = new DynamicParameters();
+            parameters.Add("@PageSize", pageSize);
+            parameters.Add("@Page", page);
 
-            return await connection.QueryAsync<EnergyConsumption>("dbo.Energy_GetAll", commandType: CommandType.StoredProcedure);
+            return await connection.QueryAsync<EnergyConsumption>("dbo.Energy_GetPaged", parameters, commandType: CommandType.StoredProcedure);
 
         }
 

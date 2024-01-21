@@ -12,9 +12,9 @@ namespace EnergyUsage.Services.Queries
             _energyUsageRepository = energyUsageRepository ?? throw new ArgumentNullException(nameof(energyUsageRepository));
         }
 
-        public async Task<IEnumerable<EnergyConsumption>> GetEnergyConsumption()
+        public async Task<IEnumerable<EnergyConsumption>> GetEnergyConsumption(int pageSize, int page)
         {
-            return await _energyUsageRepository.GetEnergyConsumptionAsync();
+            return await _energyUsageRepository.GetEnergyConsumptionAsync(pageSize, page);
         }
 
         public async Task<IEnumerable<EnergyConsumption>> GetConsumptionAnomalies()

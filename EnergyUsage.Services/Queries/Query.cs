@@ -17,7 +17,7 @@ namespace EnergyUsage.Services.Queries
         public Task<IEnumerable<Weather>> GetWeather(int pageSize, int page) => _weatherQuery.GetWeather(pageSize, page);
 
         [GraphQLName("getEnergyConsumption")]
-        public Task<IEnumerable<EnergyConsumption>> GetEnergyConsumption() => _energyUsageQuery.GetEnergyConsumption();
+        public Task<IEnumerable<EnergyConsumption>> GetEnergyConsumption(int pageSize, int page) => _energyUsageQuery.GetEnergyConsumption(pageSize, page);
 
         [GraphQLName("getConsumptionAnomalies")]
         public Task<IEnumerable<EnergyConsumption>> GetConsumptionAnomalies() => _energyUsageQuery.GetConsumptionAnomalies();

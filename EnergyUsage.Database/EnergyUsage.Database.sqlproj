@@ -69,5 +69,6 @@
     <Build Include="Stored Procedures\EnergyAnomalies_GetAll.sql" />
     <Build Include="Stored Procedures\Weather_GetAll.sql" />
     <Build Include="Stored Procedures\Weather_GetPaged.sql" />
+    <Build Include="Stored Procedures\Energy_GetPaged.sql" />
   </ItemGroup>
 </Project>

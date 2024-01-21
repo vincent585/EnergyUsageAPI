@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.Weather_GetPaged
+﻿CREATE PROCEDURE dbo.Energy_GetPaged
     @PageSize INT,
     @Page INT
 AS
@@ -8,13 +8,12 @@ BEGIN
     DECLARE @Offset INT = (@Page - 1) * @PageSize;
     
     SELECT
-        date,
-        temperature,
-        averageHumidity
+        Time,
+        Consumption
     FROM
-        Weather
+        Energy
     ORDER BY
-        date
+        Time
     OFFSET @Offset ROWS
     FETCH NEXT @PageSize ROWS ONLY;
 END;
