@@ -15,11 +15,14 @@ namespace EnergyUsage.Repository.Repositories
             _dbConnectionFactory = dbConnectionFactory ?? throw new ArgumentNullException(nameof(dbConnectionFactory));
         }
 
-        public async Task<IEnumerable<Weather>> GetWeatherAsync()
+        public async Task<IEnumerable<Weather>> GetWeatherAsync(int pageSize, int page)
         {
             using var connection = _dbConnectionFactory.Create();
+            var parameters = new DynamicParameters();
+            parameters.Add("@PageSize", pageSize);
+            parameters.Add("@Page", page);
 
-            return await connection.QueryAsync<Weather>("dbo.Weather_GetAll", commandType: CommandType.StoredProcedure);
+            return await connection.QueryAsync<Weather>("dbo.Weather_GetPaged", parameters, commandType: CommandType.StoredProcedure);
         }
 
         public void Seed(IEnumerable<Weather> dataToSeed)

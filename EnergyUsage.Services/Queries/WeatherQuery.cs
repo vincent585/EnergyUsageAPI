@@ -13,6 +13,6 @@ namespace EnergyUsage.Services.Queries
         }
 
         [GraphQLName("getWeather")]
-        public async Task<IEnumerable<Weather>> GetWeather() => await _weatherRepository.GetWeatherAsync();
+        public async Task<IEnumerable<Weather>> GetWeather(int pageSize, int page) => await _weatherRepository.GetWeatherAsync(pageSize, page);
     }
 }
