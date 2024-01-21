@@ -7,6 +7,7 @@ import './App.css';
 
 function App() {
     const [weather, setWeather] = useState([]);
+    const [energy, setEnergy] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 48 // Adjust as needed
     const WEATHER_QUERY = gql`
@@ -18,7 +19,22 @@ function App() {
             }
         }`;
 
-    const { loading, error, data } = useQuery(WEATHER_QUERY, {
+    const ENERGY_QUERY = gql`
+        query GetEnergyConsumption($pageSize: Int!, $page: Int!) {
+            getEnergyConsumption(pageSize: $pageSize, page: $page) {
+                time,
+                consumption
+            }
+        }`;
+
+    const weatherData = useQuery(WEATHER_QUERY, {
+        variables: {
+            pageSize,
+            page: currentPage
+        },
+    })
+
+    const energyData = useQuery(ENERGY_QUERY, {
         variables: {
             pageSize,
             page: currentPage
@@ -26,16 +42,32 @@ function App() {
     })
 
     useEffect(() => {
-        if (error) {
-            console.error('Error fetching weather data:', error);
+        console.log('Weather data:', weatherData);
+        console.log('Energy data:', energyData);
+
+        if (!weatherData) {
+            console.error('No weather data received.');
             return;
         }
 
-        if (!loading && data) {
-            console.log('Weather data:', data);
-            setWeather(data.getWeather);
+        if (!energyData) {
+            console.error('No energy data received.');
+            return;
         }
-    }, [loading, data, error]);
+
+        // Assuming the structure of the data, adjust this based on the actual response
+        const weatherResponse = weatherData.data?.getWeather || [];
+        const energyResponse = energyData.data?.getEnergyConsumption || [];
+
+        console.log('Processed Weather data:', weatherResponse);
+        console.log('Processed Energy data:', energyResponse);
+
+        setWeather(weatherResponse);
+        setEnergy(energyResponse);
+    }, [weatherData, energyData]);
+
+
+
 
     const options = {
         title: {
@@ -48,6 +80,28 @@ function App() {
             },
             tickInterval: 30 * 60 * 1000, // 30 minutes in milliseconds
         },
+        yAxis: [
+            {
+                title: {
+                    text: 'Temperature (C)',
+                },
+            },
+            {
+                title: {
+                    text: 'Energy Consumption',
+                },
+                opposite: true, // Display this axis on the opposite side
+            },
+        ],
+        tooltip: {
+            formatter: function () {
+                const tooltipContent = `<b>${Highcharts.dateFormat('%H:%M', this.x)}</b><br/>
+                ${this.points.map(point => `
+                ${point.series.name}: ${point.y} ${point.series.name === 'Temperature' ? 'C' : '%'}`).join('<br/>')}`;
+                return tooltipContent;
+            },
+            shared: true,
+        },
         series: [{
             name: 'Temperature',
             data: weather.map(w => ({
@@ -55,13 +109,21 @@ function App() {
                 y: w.temperature
             }))
         },
-            {
-                name: 'Humidity',
-                data: weather.map(w => ({
-                    x: new Date(w.date).getTime(),
-                    y: w.averageHumidity
-                }))
-            }]
+        //{
+        //    name: 'Humidity',
+        //    data: weather.map(w => ({
+        //        x: new Date(w.date).getTime(),
+        //        y: w.averageHumidity * 100
+        //    }))
+        //},
+        {
+            name: 'Energy Consumption',
+            data: energy.map(en => ({
+                x: new Date(en.time).getTime(),
+                y: en.consumption
+            }))
+        }],
+
     }
 
     const handleNextPage = () => {
@@ -73,7 +135,7 @@ function App() {
         setCurrentPage(currentPage - 1);
     };
 
-    const contents = loading
+    const contents = weatherData.loading
        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
         : (
             <div>
@@ -87,8 +149,8 @@ function App() {
 
     return (
         <div>
-            <h1 id="tabelLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
+            <h1 id="tabelLabel">Weather data</h1>
+            
             {contents}
             <button onClick={handlePreviousPage}>Previous Page</button>
             <button onClick={handleNextPage}>Next Page</button>
