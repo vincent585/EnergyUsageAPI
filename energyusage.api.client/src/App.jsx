@@ -86,14 +86,14 @@ function App() {
 
     const options = {
         title: {
-            text: 'Weather data'
+            text: energy.length > 0 ? Highcharts.dateFormat('%Y-%m-%d', new Date(energy[0].time).getTime()) : 'Energy Consumption Chart'
         },
         xAxis: {
             type: 'datetime',
             labels: {
-                format: '{value:%H:%M}', // Display hours and minutes
+                format: '{value:%H:%M}',
             },
-            tickInterval: 30 * 60 * 1000, // 30 minutes in milliseconds
+            tickInterval: 30 * 60 * 1000,
         },
         yAxis: [
             {
@@ -105,7 +105,6 @@ function App() {
                 title: {
                     text: 'Energy Consumption',
                 },
-                opposite: true, // Display this axis on the opposite side
             },
         ],
         tooltip: {
@@ -126,7 +125,7 @@ function App() {
                         });
 
                         if (isAnomaly) {
-                            content +=  `<b> (Anomaly) </b>`;
+                            content += `<b style="color: red;"> (Anomaly) </b>`;
                         }
                     }
                     return content;
@@ -187,7 +186,7 @@ function App() {
 
     return (
         <div>
-            <h1 id="tabelLabel">Weather data</h1>
+            <h1 id="tabelLabel">Energy Consumption and Climate</h1>
             
             {contents}
             <button onClick={handlePreviousPage}>Previous Page</button>
