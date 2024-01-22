@@ -30,7 +30,7 @@ namespace EnergyUsage.Repository.Repositories
         {
             using var connection = _dbConnectionFactory.Create();
 
-            return await connection.QueryAsync<EnergyConsumption>("dbo.Energy_GetAllAnomalies", commandType: CommandType.StoredProcedure);
+            return await connection.QueryAsync<EnergyConsumption>("dbo.EnergyAnomalies_GetAll", commandType: CommandType.StoredProcedure);
         }
 
         public void Seed(string tableName, IEnumerable<EnergyConsumption> dataToSeed)

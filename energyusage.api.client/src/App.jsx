@@ -8,6 +8,7 @@ import './App.css';
 function App() {
     const [weather, setWeather] = useState([]);
     const [energy, setEnergy] = useState([]);
+    const [anomalies, setAnomalies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 48 // Adjust as needed
     const WEATHER_QUERY = gql`
@@ -27,6 +28,14 @@ function App() {
             }
         }`;
 
+    const ANOMALIES_QUERY = gql`
+        query {
+            getConsumptionAnomalies {
+                time,
+                consumption
+             }
+        }`;
+
     const weatherData = useQuery(WEATHER_QUERY, {
         variables: {
             pageSize,
@@ -41,9 +50,12 @@ function App() {
         },
     })
 
+    const anomaliesData = useQuery(ANOMALIES_QUERY);
+
     useEffect(() => {
         console.log('Weather data:', weatherData);
         console.log('Energy data:', energyData);
+        console.log('Anomalies data:', anomaliesData)
 
         if (!weatherData) {
             console.error('No weather data received.');
@@ -55,16 +67,19 @@ function App() {
             return;
         }
 
-        // Assuming the structure of the data, adjust this based on the actual response
+        if (!anomaliesData) {
+            console.error('No anomalies data received.');
+            return;
+        }
+
         const weatherResponse = weatherData.data?.getWeather || [];
         const energyResponse = energyData.data?.getEnergyConsumption || [];
-
-        console.log('Processed Weather data:', weatherResponse);
-        console.log('Processed Energy data:', energyResponse);
+        const anomaliesResponse = anomaliesData.data?.getConsumptionAnomalies || [];
 
         setWeather(weatherResponse);
         setEnergy(energyResponse);
-    }, [weatherData, energyData]);
+        setAnomalies(anomaliesResponse);
+    }, [weatherData, energyData, anomaliesData]);
 
 
 
@@ -95,12 +110,35 @@ function App() {
         ],
         tooltip: {
             formatter: function () {
-                const tooltipContent = `<b>${Highcharts.dateFormat('%H:%M', this.x)}</b><br/>
-                ${this.points.map(point => `
-                ${point.series.name}: ${point.y} ${point.series.name === 'Temperature' ? 'C' : '%'}`).join('<br/>')}`;
+                const formattedX = Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x)
+
+                const tooltipContent = `<b>${formattedX}</b><br/>
+            ${this.points.map(point => {
+                    let content = `${point.series.name}: ${point.y}`;
+                    if (point.series.name === 'Temperature') {
+                        content += ' C';
+                    } else if (point.series.name === 'Humidity') {
+                        content = `${point.series.name}: ${point.y * 100}%`
+                    } else if (point.series.name === 'Energy Consumption') {
+                        const isAnomaly = anomalies.some(anomaly => {
+                            const anomalyTime = Highcharts.dateFormat('%Y-%m-%d %H:%M', new Date(anomaly.time).getTime());
+                            return anomalyTime === formattedX && Math.abs(anomaly.consumption - point.y) < 0.01;
+                        });
+
+                        if (isAnomaly) {
+                            content +=  `<b> (Anomaly) </b>`;
+                        }
+                    }
+                    return content;
+                }).join('<br/>')}`;
                 return tooltipContent;
             },
             shared: true,
+        },
+        plotOptions: {
+            series: {
+                visible: true,
+            },
         },
         series: [{
             name: 'Temperature',
@@ -109,13 +147,13 @@ function App() {
                 y: w.temperature
             }))
         },
-        //{
-        //    name: 'Humidity',
-        //    data: weather.map(w => ({
-        //        x: new Date(w.date).getTime(),
-        //        y: w.averageHumidity * 100
-        //    }))
-        //},
+        {
+            name: 'Humidity',
+            data: weather.map(w => ({
+                x: new Date(w.date).getTime(),
+                y: w.averageHumidity
+            })),
+        },
         {
             name: 'Energy Consumption',
             data: energy.map(en => ({
